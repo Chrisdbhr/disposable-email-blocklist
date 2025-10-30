@@ -22,7 +22,7 @@ jobs:
       - name: Generate JSON file
         run: |
           echo "[" > generated/disposable_domains.json
-          grep -vE '^\s*#|^\s*$' disposable_domains.txt | sort -u | awk '{print "    \"" $1 "\","}' >> generated/disposable_domains.json
+          grep -vE '^\s*#|^\s*$' disposable_domains.txt | tr -d '\r' | sort -u | awk '{print "    \"" $1 "\","}' >> generated/disposable_domains.json
           sed -i '$ s/,$//' generated/disposable_domains.json
           echo "]" >> generated/disposable_domains.json
 
@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > generated/disposable_domains.xml
           echo "<domains>" >> generated/disposable_domains.xml
-          grep -vE '^\s*#|^\s*$' disposable_domains.txt | sort -u | awk '{print "  <domain>" $1 "</domain>"}' >> generated/disposable_domains.xml
+          grep -vE '^\s*#|^\s*$' disposable_domains.txt | tr -d '\r' | sort -u | awk '{print "  <domain>" $1 "</domain>"}' >> generated/disposable_domains.xml
           echo "</domains>" >> generated/disposable_domains.xml
       
       - name: Commit and push generated files
