@@ -62,4 +62,4 @@ Contributions are very welcome!
 Once your PR is merged, the GitHub Action will automatically run, validate, and update the JSON and XML files.
 
 ## 📄 License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/Chrisdbhr/disposable-email-blocklist/blob/main/.github/LICENSE) file for details.

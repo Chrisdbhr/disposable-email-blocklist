@@ -1,0 +1,42 @@
+name: Generate Data Files
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create generated directory
+        run: mkdir -p generated
+
+      - name: Generate JSON file
+        run: |
+          echo "[" > generated/disposable_domains.json
+          grep -vE '^\s*#|^\s*$' disposable_domains.txt | sort -u | awk '{print "    \"" $1 "\","}' >> generated/disposable_domains.json
+          sed -i '$ s/,$//' generated/disposable_domains.json
+          echo "]" >> generated/disposable_domains.json
+
+      - name: Generate XML file
+        run: |
+          echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > generated/disposable_domains.xml
+          echo "<domains>" >> generated/disposable_domains.xml
+          grep -vE '^\s*#|^\s*$' disposable_domains.txt | sort -u | awk '{print "  <domain>" $1 "</domain>"}' >> generated/disposable_domains.xml
+          echo "</domains>" >> generated/disposable_domains.xml
+      
+      - name: Commit and push generated files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: Auto-generate data files"
+          file_pattern: "generated/*"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
